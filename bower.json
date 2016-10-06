@@ -1,0 +1,11 @@
+{
+  "name": "Test Application",
+  "version": "1.0.0",
+  "authors": [
+    "Sean Corrigan <sean.corrigan@brightserve.com>"
+  ],
+  "dependencies": {
+    "angular": "*",
+    "bootstrap": "~3.3.6"
+  }
+}

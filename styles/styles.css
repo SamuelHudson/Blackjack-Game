@@ -1,0 +1,90 @@
+/*
+global styling
+*/
+html,
+body {
+  height: 100%;
+  background-color: #F5F4F7;
+}
+body {
+  color: #F5F4F7;
+  text-shadow: 0 .05rem .1rem rgba(0,0,0,.5);
+  font-size: 100%;
+
+}
+
+li {
+	font-family: 'Arial Black';
+	color: #2E282A;
+	font-size: 1em;
+}
+
+button {
+	background-color: #2E282A;
+	border-radius: 8px;
+	border: none;
+	box-shadow: 5px 5px 10px #000000;
+	font-family: 'Arial Black';
+	font-size: 1.2em;
+	color: #D0C8AD;
+}
+
+/*header area containing blackjack title,
+start and reset buttons and cards remaining*/
+#headerArc {
+	font-size: 2em;
+	font-family: 'Arial Black';
+	color: #F5F4F7;
+	background-color: #2E282A;
+	border-radius: 8px;
+	border-top-color: #544F50;
+	border-top-width: 20px;
+	border-top-style: solid; 
+	display: block;
+	margin: auto;
+	text-align: center;
+	margin-bottom: 1%;
+	margin: 1%;
+	box-shadow: 5px 5px 10px #000000; 
+}
+
+/*blackjack game title*/
+#header {
+	text-shadow: 3px 3px 3px #000000;
+}
+
+/*player tabs displaying cards and total*/
+#players {
+	display: block;
+	margin: auto;
+	text-align: center;
+	font-size: 1.75em;
+	font-family: 'Arial Black';
+	color: #F5F4F7;
+	background-color: #2E282A;
+	border-radius: 8px;
+	border-top-color: #544F50;
+	border-top-width: 20px;
+	border-top-style: solid;
+	margin-bottom: 1%;
+	padding: 3%;
+	margin-bottom: 1%;
+	box-shadow: 5px 5px 10px #000000; 
+}
+
+/*players' cards*/
+#card {
+	text-align: center;
+	margin: 1%;
+	background-color: #FFFFFF;
+	height: 18%;
+	border-radius: 3px;
+	box-shadow: 5px 5px 10px #000000;
+}
+
+/*bust, blackjack and winning/losing*/
+.emphText {
+	font-family: 'Arial Black';
+	font-size: 1.5em;
+	color: #FE5F55;
+}

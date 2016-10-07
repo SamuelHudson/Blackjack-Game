@@ -3,8 +3,8 @@
 // Declare app level module which depends on views, and components
 angular.module('TestApplication', [
   'ngRoute',
-
   'TestApplication.controllers',
+  'TestApplication.services'
 ])
 .controller('MainController', function($scope) {
 })

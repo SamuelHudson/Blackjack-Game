@@ -6,6 +6,7 @@
   ],
   "dependencies": {
     "angular": "*",
+    "angular-route": "*",
     "bootstrap": "~3.3.6"
   }
 }

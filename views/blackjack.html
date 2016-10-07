@@ -1,0 +1,67 @@
+<div class="container-fluid">
+
+    <!-- header section containing title, start and reset buttons and cards remianing -->
+    <div class="row" id="headerArc">
+        <h1 id="header">Blackjack Game</h1></br>
+        <button ng-click="startGame()">Start Game!</button></br></br>
+        <button ng-click="resetGame()" ng-model="clicked" ng-disabled="clicked">Reset</button></br></br>
+        <span ng-show="listOfPlayers.length>0">Cards remaining: {{Deck.length}}</span></br>
+        <span ng-show="listOfPlayers.length>0">Hands played: {{handsPlayed}}</span></br>                  
+    </div>
+    <!-- 
+    bootstrap tabs to display individual players 
+    -->
+    <ul class="nav nav-tabs nav-justified">
+        <li ng-repeat="player in listOfPlayers" ng-click="selectPlayer(player)" ng-class="{ 'active' : selectedPlayer == player }"><a href="">Player: {{player.Number}}</a></li>
+    </ul>
+    <!-- 
+    div containing all player UI 
+    -->
+    <div class="row" id="players" ng-if="selectedPlayer">
+        <div class="">
+            <p>Player: {{selectedPlayer.Number}}</p>
+            <!-- 
+            player cards 
+            -->
+            <div class="row">
+        	   <img ng-repeat="card in selectedPlayer.Cards" ng-src="./assets/cards/{{card.Value}}_of_{{card.Suit}}.png" alt="Card." id="card"></img>
+            </div>
+            <span>Total: {{calculateTotalOfCards(selectedPlayer.Cards)}}</span></br></br>
+            <!--- 
+            betting interface 
+            -->
+            <div class="row" ng-if="!selectedPlayer.Dealer == true">
+                <p> Stake: {{selectedPlayer.CurrentBet}}</p>
+                <form name="betNow">
+                    <input type="number" name="betStake" ng-model="selectedPlayer.CurrentBet" ng-min="5" ng-max="{{selectedPlayer.ChipStack}}" style="color:#2E282A;">
+                    <span ng-show="betNow.betStake.$invalid" class="emphText">A number between 5 - {{selectedPlayer.ChipStack}} is required!</span></br></br>
+                    <button class="btn" ng-disabled="betNow.betStake.$invalid" ng-if="!selectedPlayer.BetComplete == true" ng-click="stake(selectedPlayer); selectedPlayer.BetComplete = true">Bet!</button>
+                    </br>
+                </form>
+                <p>Chip Stack: {{selectedPlayer.ChipStack}}</p>
+            </div>
+            <!-- 
+            draw card, stick and dealer compare buttons 
+            -->
+            <div class="btn-group text-center" role="group">   		
+    		  <button class="btn" ng-click="drawCard(selectedPlayer); calculateTotalOfCards(selectedPlayer.Cards)" ng-disabled="selectedPlayer.Stick == true" ng-hide="calculateTotalOfCards(selectedPlayer.Cards)>=21">Draw Card</button>
+    		  <button class="btn" ng-click="selectedPlayer.Stick = true" ng-disabled="selectedPlayer.Stick == true" ng-hide="calculateTotalOfCards(selectedPlayer.Cards)>=21">Stick</button>
+    		  <button class="btn" ng-click="compareDealer(selectedPlayer.Cards); selectedPlayer.DealerComplete = true" ng-disabled="selectedPlayer.DealerComplete == true" ng-if="selectedPlayer.Dealer == true">Compare</button>
+            </div>
+            <!-- 
+            outcome text 
+            -->
+            <p ng-show="calculateTotalOfCards(selectedPlayer.Cards)>21" class="emphText">Bust!</p>
+            <p ng-show="calculateTotalOfCards(selectedPlayer.Cards)==21" class="emphText">Blackjack!</p>
+            <!-- 
+            compare stats generated through dealer compare button 
+            -->
+            <div class="row" class="emphText" ng-if="winningCounter.length || losingCounter.length">
+    		</br>
+                <p>Players who beat the dealer: {{winningCounter}}</p>
+                <p>Players who lost against the dealer: {{losingCounter}}</p>
+        		<p>Players who tied with the dealer: {{tiedCounter}}</p>
+        	</div>
+        </div>
+    </div>
+</div>

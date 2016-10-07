@@ -1,6 +1,6 @@
 angular.module('TestApplication.controllers', [])
 
-.controller('BlackjackController', function($scope) {
+.controller('BlackjackController', function($scope, DeckFactory) {
 
     //set values for card suit/value and the deck
     $scope.values = ["ACE", "2", "3", "4", "5", "6", "7", "8", "9", "10", "JACK", "QUEEN", "KING"];
@@ -22,46 +22,6 @@ angular.module('TestApplication.controllers', [])
     //function for storing selectedPlayer
     $scope.selectPlayer = function(player) {
         $scope.selectedPlayer = player;
-    }
-
-    //create 52 card deck
-    $scope.createDeck = function() {
-        // Create deck of cards  
-        var deck = [];
-        // loop suits
-        for (var i = 0; i < $scope.suits.length; i++) {
-            var suit = $scope.suits[i];
-            // loop values  
-            for (var j = 0; j < $scope.values.length; j++) {
-                var value = $scope.values[j];
-                var card = {
-                    Suit: suit,
-                    Value: value
-                };
-                deck.push(card);
-            }
-        }
-        return deck;
-    }
-
-    //shuffle the deck created
-    $scope.shuffleDeck = function(_deck, x) {
-        
-        //counter variable
-        var timesShuffled = 0;
-        
-        // shuffle deck of cards x amount of times
-        while (x > timesShuffled) {
-            timesShuffled++;
-            
-            // In turn take each card out of the deck and place it back in a random position
-            var lastCard = _deck.pop();
-            var firstCard = _deck.shift();
-            var position = Math.floor(Math.random() * _deck.length);
-            _deck.splice(position, 0, lastCard);
-            _deck.splice(position, 0, firstCard);
-        }
-        return _deck;
     }
 
     //function for creating the listOfPlayers array
@@ -98,7 +58,7 @@ angular.module('TestApplication.controllers', [])
             // loop through all players and give them a card    
             for (var i = 0; i < $scope.listOfPlayers.length; i++) {
                 var _player = $scope.listOfPlayers[i];
-                $scope.drawCard(_player);
+                DeckFactory.drawCard(_player, $scope.Deck);
             }
             dealtRounds++;
         }
@@ -126,15 +86,10 @@ angular.module('TestApplication.controllers', [])
     //function container all other functions needed to get the game properly initialised
     $scope.startGame = function() {
         $scope.init();
-        $scope.Deck = $scope.createDeck();
-        $scope.shuffleDeck($scope.Deck, 100);
+        $scope.Deck = DeckFactory.create();
+        $scope.Deck = DeckFactory.shuffle($scope.Deck, 100);
         $scope.listOfPlayers = $scope.createList(prompt("How many players are there?", ""))
         $scope.deal();
-    }
-
-    //function used to draw a signle card 
-    $scope.drawCard = function(player) {
-        player.Cards.push($scope.Deck.shift());
     }
 
     //function for controlling the total number in players hand
@@ -288,7 +243,7 @@ angular.module('TestApplication.controllers', [])
         $scope.winningCounter = "";
         $scope.losingCounter = "";
         $scope.tiedCounter = "";
-        $scope.shuffleDeck($scope.Deck, 100);        
+        DeckFactory.shuffle($scope.Deck, 100);        
         $scope.deal();        
     }
 })

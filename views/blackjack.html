@@ -35,7 +35,7 @@
                 <form name="betNow">
                     <input type="number" name="betStake" ng-model="selectedPlayer.CurrentBet" ng-min="5" ng-max="{{selectedPlayer.ChipStack}}" style="color:#2E282A;">
                     <span ng-show="betNow.betStake.$invalid" class="emphText">A number between 5 - {{selectedPlayer.ChipStack}} is required!</span></br></br>
-                    <button class="btn" ng-disabled="betNow.betStake.$invalid" ng-if="!selectedPlayer.BetComplete == true" ng-click="stake(selectedPlayer); selectedPlayer.BetComplete = true">Bet!</button>
+                    <button class="btn" ng-disabled="betNow.betStake.$invalid || selectedPlayer.BetComplete == true || calculateTotalOfCards(selectedPlayer.Cards) >= 21" ng-click="stake(selectedPlayer); selectedPlayer.BetComplete = true">Bet!</button>
                     </br>
                 </form>
                 <p>Chip Stack: {{selectedPlayer.ChipStack}}</p>
@@ -44,8 +44,8 @@
             draw card, stick and dealer compare buttons 
             -->
             <div class="btn-group text-center" role="group">   		
-    		  <button class="btn" ng-click="drawCard(selectedPlayer); calculateTotalOfCards(selectedPlayer.Cards)" ng-disabled="selectedPlayer.Stick == true" ng-hide="calculateTotalOfCards(selectedPlayer.Cards)>=21">Draw Card</button>
-    		  <button class="btn" ng-click="selectedPlayer.Stick = true" ng-disabled="selectedPlayer.Stick == true" ng-hide="calculateTotalOfCards(selectedPlayer.Cards)>=21">Stick</button>
+    		  <button class="btn" ng-click="drawCard(selectedPlayer); calculateTotalOfCards(selectedPlayer.Cards)" ng-disabled="selectedPlayer.Stick == true" ng-hide="calculateTotalOfCards(selectedPlayer.Cards)>=21" ng-if="selectedPlayer.BetComplete == true || selectedPlayer.Dealer == true">Draw Card</button>
+    		  <button class="btn" ng-click="selectedPlayer.Stick = true" ng-disabled="selectedPlayer.Stick == true" ng-hide="calculateTotalOfCards(selectedPlayer.Cards)>=21" ng-if="selectedPlayer.BetComplete == true || selectedPlayer.Dealer == true">Stick</button>
     		  <button class="btn" ng-click="compareDealer(selectedPlayer.Cards); selectedPlayer.DealerComplete = true" ng-disabled="selectedPlayer.DealerComplete == true" ng-if="selectedPlayer.Dealer == true">Compare</button>
             </div>
             <!-- 

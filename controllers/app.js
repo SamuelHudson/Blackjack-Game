@@ -11,6 +11,7 @@ angular.module('TestApplication', [
 
 .config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
   $routeProvider.
-  	when("/", {templateUrl: "views/blackjack.html", controller: "BlackjackController"}).
+  	when("/blackjack", {templateUrl: "views/blackjack.html", controller: "BlackjackController"}).
+  	when("/texas-holdem", {templateUrl: "views/texasholdem.html", controller: "TexasHoldemController"}).
 	otherwise({redirectTo: '/'});
 }])

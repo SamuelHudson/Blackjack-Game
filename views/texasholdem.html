@@ -1,0 +1,77 @@
+<div class="container-fluid">
+    <!--
+    header section
+    -->
+    <div class="row text-center mainTH">
+        <div class="col-lg-4, col-md-6, col-sm-8, col-xs-12">
+            <p id="headerTH">Texas Hold'em!</p></br>
+            <button class="btn buttonsTH" ng-click="name(); startGameTH()">Start Game!</button></br></br>
+            <button class="btn buttonsTH" ng-if="!player.Name.length<1">Reset</button></br></br>
+            <span ng-if="!player.Name.length<1">Winnings earned: {{totalWinnings}}</span></br>  
+        </div>
+    </div>
+    <!--
+    main game section
+    -->
+    <div class="row text-center" id="table" ng-if="!player.Name.length<1">
+        <div class="col-lg-8, col-md-10, col-sm-12, col-xs-12">
+            <div class="playerID player">
+                <p>Dealer</p>
+            </div>
+            <div class="row">
+                <!--
+                table cards to be displayed
+                -->
+                <div class="row">
+                    <img ng-repeat="card in Dealer.Cards" ng-src="./assets/cards/{{card.Value}}_of_{{card.Suit}}.png" alt="Card." id="cardTH"></img>
+                </div>
+                <div class="playerIDMid player pull-right">
+                    <p>{{Steve.Name}}</p>
+                </div>
+                <div class="playerIDMid player pull-left">
+                    <p>{{Pete.Name}}</p>
+                </div>
+            </div></br>
+            <span ng-if="!player.Name.length<1">Total Pot: {{tablePot}}</span></br></br></br>
+            <div class="row text-center">
+                <div class="playerID player">
+                    <p>{{player.Name}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--
+    player UI
+    -->
+    <div class="row text-center mainTH" ng-if="!player.Name.length<1">
+        <div class="col-lg-4, col-md-6, col-sm-8, col-xs-12">
+            <h1 id="header">What will you do, {{player.Name}}?</h1></br>
+            <!--
+            display player cards
+            -->
+            <div class="row text center">
+                <img ng-repeat="card in player.Cards" ng-src="./assets/cards/{{card.Value}}_of_{{card.Suit}}.png" alt="Card." id="cardTH"></img>
+            </div>
+            <p>Current bet: {{tableBet}}</p>
+            <p>Your chip stack: {{player.ChipStack}}</p></br>
+            <!--
+            check, call and fold buttons
+            -->
+            <div class="btn-group text-center">
+                <button class="btn buttonsTH" ng-click="playerCheck()">Check</button>
+                <button class="btn buttonsTH" ng-click="playerCall(Steve.CurrentBet)">Call</button>
+                <button class="btn buttonsTH" ng-click="playerFold()">Fold</button>
+            </div></br></br>
+            <!--
+            betting interface
+            -->
+            <div class="text center">
+                <form name="betTH">
+                    <input type="number" name="amountTH" ng-model="tableBet" style="color:#2E282A;">
+                    <!--<span class="emphText">A number between 5 - 100 is required!</span>--></br></br>
+                    <button class="btn buttonsTH">Raise</button>
+                </form>
+            </div>  
+        </div>
+    </div>    
+</div>

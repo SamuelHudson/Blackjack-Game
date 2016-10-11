@@ -88,3 +88,94 @@ start and reset buttons and cards remaining*/
 	font-size: 1.5em;
 	color: #FE5F55;
 }
+
+/*------------------- 
+Texas Hold'em styling
+-------------------*/
+
+/*texas hold'em header and player interface*/
+.mainTH {
+	font-size: 30px;
+	font-family: 'Arial Black';
+	color: #F1EBCA;
+	background-color: #678D58;
+	border-radius: 8px;
+	border-top-color: #82A176;
+	border-top-width: 20px;
+	border-top-style: solid; 
+	display: block;
+	margin: auto;
+	text-align: center;
+	margin-bottom: 1%;
+	margin: 1%;
+	box-shadow: 5px 5px 10px #000000;
+	padding: 0.5%; 
+}
+
+/*Texas Hold'em game title*/
+#headerTH {
+	font-size: 50px;
+	text-shadow: 3px 3px 3px #000000;
+}
+
+/*buttons*/
+.buttonsTH {
+	background-color: #7E5D39;
+	border-radius: 8px;
+	border: none;
+	box-shadow: 5px 5px 10px #000000;
+	font-family: 'Arial Black';
+	font-size: 28px;
+	color: #F1EBCA;
+}
+
+/*texas hold'em table*/
+#table {
+	display: block;
+	margin: auto;
+	height: 50%;
+	width: 90%;
+	background-color: #678D58;
+	border-radius: 50%;
+	box-shadow: 5px 5px 10px #000000;
+	font-size: 22px;
+	font-family: 'Arial Black';
+	color: #F1EBCA; 
+}
+
+/*texas hold'em player*/
+.player {
+	height: 85px;
+	width: 85px;
+	background-color: #7E5D39;
+	border-radius: 50px;
+	text-align: center;
+	line-height: 85px;
+}
+
+/*players sitting in middle of table*/
+.playerIDMid {
+	font-family: 'Arial Black';
+	color: #F1EBCA;
+	vertical-align: middle;
+	float: none;
+}
+
+/*#player ID*/
+.playerID {
+	font-family: 'Arial Black';
+	color: #F1EBCA;
+	display: inline-block;
+	vertical-align: middle;
+	float: none;
+}
+
+/*TH cards*/
+#cardTH {
+	text-align: center;
+	margin: 1%;
+	background-color: #FFFFFF;
+	height: 20%;
+	border-radius: 3px;
+	box-shadow: 5px 5px 10px #000000;
+}

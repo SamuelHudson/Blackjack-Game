@@ -46,12 +46,6 @@ angular.module('TestApplication.services', [])
             	_deck.splice(position, 0, firstCard);
         	}
         	return _deck;
-    	},
-
-    	//draw a card from the deck
-    	drawCard: function(player, deck) {
-
-        player.Cards.push(deck.shift());
     	}
 	}
 })

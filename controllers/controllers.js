@@ -260,20 +260,24 @@ angular.module('TestApplication.controllers', [])
     $scope.player = {
         Name: "",
         Cards: [],
-        ChipStack: 100
+        ChipStack: 100,
+        raiseAmount: 0,
+        Fold: false
     };
 
     //steve and pete players
     $scope.Steve = {
         Name: "Steve",
         Cards: [],
-        ChipStack: 100
+        ChipStack: 100,
+        Auto: false
     };
 
     $scope.Pete = {
         Name: "Pete",
         Cards: [],
-        ChipStack: 100
+        ChipStack: 100,
+        Auto: false
     };
 
     //dealer player
@@ -290,6 +294,9 @@ angular.module('TestApplication.controllers', [])
 
     //winnings earned
     $scope.totalWinnings = 0;
+
+    //game completed
+    $scope.GameComplete = false;
 
     //assigning user response to player name 
     $scope.name = function() {
@@ -355,6 +362,13 @@ angular.module('TestApplication.controllers', [])
         $scope.Steve.Cards = [];
         $scope.Pete.Cards = [];
         $scope.Dealer.Cards = [];
+
+        //reset steve and pete auto
+        $scope.Steve.Auto = false;
+        $scope.Pete.Auto = false;
+
+        //reset fold
+        $scope.player.Fold = false;
         
         //reset the deck
         $scope.Deck = [];
@@ -371,7 +385,8 @@ angular.module('TestApplication.controllers', [])
 
     //steve and pete function to play the game autonomously
     $scope.autonomousTH = function(_player) {
-        //variables for suit and value
+       
+       //variables for suit and value
         var suit = "";
         var value = "";
 
@@ -393,7 +408,7 @@ angular.module('TestApplication.controllers', [])
                 dealerValue = _card.Value;
 
                 //if the player's cards suit and value are equal to the
-                //table cards then increase matches counters
+                //table cards then increase match counters
                 if(suit == dealerSuit) {
                     suitMatches++;
                 }
@@ -404,23 +419,29 @@ angular.module('TestApplication.controllers', [])
         })
 
         //make sure that the current player isn't Pete
-        if(!_player == $scope.Pete) {
+        if(_player == $scope.Steve) {
+            
+            //confirm that steve has completed his turn
+            $scope.Steve.Auto = true;
 
             //if the counters count 3 or more matches then increase the current bet
-            //else move on to the next player/deal a card
             if(suitMatches > 2 || valueMatches > 2) {
                 $scope.playerBet(_player);
             }
         }
-        //else either increase the bet or deal another card and go to Steve
-        else {
+        //else its pete
+        else if (_player == $scope.Pete) {
+            
+            //confirm that pete has completed his turn
+            $scope.Pete.Auto = true;            
+            
+            //examine matches and then continue on to dealer
             if(suitMatches > 2 || valueMatches > 2) {
                 $scope.playerBet(_player);
             }
-            else {
-                $scope.drawCardTH($scope.Dealer);
-                $scope.autonomousTH($scope.Steve);
-            }
+
+            //call dealer function
+            $scope.dealerTH();
         }
     }                
 
@@ -443,20 +464,9 @@ angular.module('TestApplication.controllers', [])
 
     //player Check function
     $scope.playerCheck = function() {
+        
         //move left to Pete
         $scope.autonomousTH($scope.Pete);
-
-        //if Pete has raised the tablebet then go back to Steve
-        //and then player
-        if ($scope.Pete.CurrentBet > 1) {
-            $scope.autonomousTH($scope.Steve);
-        }
-        //if not then deal the 4th and then the river
-        //also set the tablebet to 1  
-        else {
-            $scope.drawCard($scope.Dealer);
-            $scope.tableBet = 0;
-        }
     }
 
     //player Call function
@@ -467,14 +477,14 @@ angular.module('TestApplication.controllers', [])
 
         //continue on to Pete
         $scope.autonomousTH($scope.Pete);
-        console.log($scope.Dealer.Cards);
     }
-
 
     //player Fold function
     $scope.playerFold = function() {
+        
         //discard cards in hand
         $scope.player.Cards.forEach(function(card) {
+            
             //create card
             var _card = {
                 Suit: card.Suit,
@@ -485,30 +495,175 @@ angular.module('TestApplication.controllers', [])
             $scope.Deck.push(_card);
         });
 
-        console.log($scope.player.Cards);
-
         //move on to Pete
         $scope.autonomousTH($scope.Pete);
-
-        //then to Steve
-        $scope.autonomousTH($scope.Steve);
     }
 
-    //continuation function back to steve after 4th and river
+    //function for player raise
+    $scope.playerRaise = function() {
 
-    //dealer function that deals flop after initial bets, then deals the 4th
-    //after further bets, then the river when players have finished betting
+        //variable for player.raiseamount
+        var amount = $scope.player.raiseAmount;
 
+        //minus amount from chipstack
+        $scope.player.ChipStack -= amount;
 
+        //add amount to tablebet
+        $scope.tableBet += amount;
+
+        //add amount to tablepot
+        $scope.tablePot += amount;
+
+        //move on to pete
+        $scope.autonomousTH($scope.Pete);
+    }
+
+    //dealer function deals the 4th and river autonomously after pete
+    //and goes back to steve
+    $scope.dealerTH = function() {
+
+        //confirm that both steve and pete have had their turns
+        if ($scope.Steve.Auto == true && $scope.Pete.Auto == true) {
+
+            //confirm that there are 3 cards on the table
+            if ($scope.Dealer.Cards.length == 3) {
+
+                //deal the 4th
+                $scope.Dealer.Cards.push($scope.Deck.shift());
+
+                //reset steve and pete auto to false
+                $scope.Steve.Auto = false;
+                $scope.Pete.Auto = false;
+
+                //move on to steve
+                $scope.autonomousTH($scope.Steve);
+            } 
+
+            //if there are 4 cards on the table
+            else if ($scope.Dealer.Cards.length == 4) {
+
+                //deal the river
+                $scope.Dealer.Cards.push($scope.Deck.shift());
+
+                //reset steve and pete auto to false
+                $scope.Steve.Auto = false;
+                $scope.Pete.Auto = false;
+
+                //move on to steve
+                $scope.autonomousTH($scope.Steve);
+            }
+
+            //if there are 5 cards on the table then
+            //call a comparison function to compare dealer
+            //hands and pay out the pot
+            else if ($scope.Dealer.Cards.length == 5) {
+
+                //set game complete to true
+                $scope.GameComplete = true;
+
+                //call comparison function
+                $scope.compareTH($scope.Steve);
+                $scope.compareTH($scope.player);
+                $scope.compareTH($scope.Pete);
+            }
+        }
+    }    
 
     //function to judge the player's hand against opponents
+    $scope.compareTH = function(_player) {
+
+        //counter variables
+        var suitCounter = 0;
+        var valueCounter = 0;
+
+        //obtain player cards
+        _player.Cards.forEach(function(card) {
+
+            //variables for suit and value
+            var plaCardSuit = card.Suit;
+            var plaCardValue = card.Value;
+
+            //obtain table cards
+            $scope.Dealer.Cards.forEach(function(_card) {
+
+                //variables for suit and value
+                //of table cards
+                var deaCardSuit = _card.Suit;
+                var deaCardValue = _card.Value;
+
+                if (plaCardSuit == deaCardSuit) {
+                    suitCounter++;
+                }
+                if (plaCardValue == deaCardValue) {
+                    valueCounter++;
+                }
+
+            })
+        })
+
+        //compare the two cards in the players hand
+        for (var i = 0; i < _player.Cards.length; i++) {
+
+            //obtain value and suit of first card
+            var handSuit = _player.Cards[i].Suit;
+            var handValue = _player.Cards[i].Value;
+        }
+
+        //compare this to the other card in the hand
+        if (handSuit == _player.Cards[0].Suit) {
+            suitCounter++;
+        }
+        if (handValue == _player.Cards[0].Value) {
+            valueCounter++;
+        }
+
+        //compare the 5 cards on the table
+        for (var j = 0; j < $scope.Dealer.Cards.length; j++) {
+
+            //obtain value and suit of the first card
+            var dealSuit = $scope.Dealer.Cards[0].Suit;
+            var dealValue = $scope.Dealer.Cards[0].Value;
+
+            if (dealSuit == $scope.Dealer.Cards[j].Suit) {
+                suitCounter++;
+            }
+            if (dealValue == $scope.Dealer.Cards[j].Value) {
+                valueCounter++;
+            }
+        }
+
+        console.log(suitCounter);
+        console.log(valueCounter);
+
+        switch(true) {
+            case (valueCounter == 1):
+                console.log("1 Pair!");
+                break;
+            case (valueCounter == 2):
+                console.log("2 Pair!");
+                break;
+            case (valueCounter == 3):
+                console.log("Three of a kind!");
+                break;
+            case (valueCounter == 5):
+                console.log("Four of a kind!");
+                break;
+            case (suitCounter == 9):
+                console.log("Flush!");
+                break;
+            case (valueCounter == 2 && valueCounter == 3):
+                console.log("Full house!");
+                break;
+            default:
+                console.log("Nothing");
+                break;
+        }
+    }
 
     //payout function 
-
-
-
-
-
+    $scope.payoutTH = function() {
+        //code
+    }
 
 })
 

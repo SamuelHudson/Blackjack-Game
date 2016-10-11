@@ -41,37 +41,57 @@
         </div>
     </div>
     <!--
+    results printout
+    -->
+    <div class="row text-center mainTH" ng-if="GameComplete == true">
+        <div class="col-lg-4, col-md-6, col-sm-8, col-xs-12">
+            <h1 id="headerTH">Results!</h1>
+            <div class="row text-center">
+                <p>Steve had: </p>
+                <img ng-repeat="card in Steve.Cards" ng-src="./assets/cards/{{card.Value}}_of_{{card.Suit}}.png" alt="Card." id="cardTH"></img>
+            </div></br>
+            <div class="row text-center">
+                <p>You had: </p>
+                <img ng-repeat="card in player.Cards" ng-src="./assets/cards/{{card.Value}}_of_{{card.Suit}}.png" alt="Card." id="cardTH"></img>
+            </div></br>
+            <div class="row text-center">
+                <p>Pete had: </p>
+                <img ng-repeat="card in Pete.Cards" ng-src="./assets/cards/{{card.Value}}_of_{{card.Suit}}.png" alt="Card." id="cardTH"></img>
+            </div>
+        </div>
+    </div>
+    <!--
     player UI
     -->
     <div class="row text-center mainTH" ng-if="!player.Name.length<1">
         <div class="col-lg-4, col-md-6, col-sm-8, col-xs-12">
-            <h1 id="header">What will you do, {{player.Name}}?</h1></br>
+            <h1 id="headerTH">What will you do, {{player.Name}}?</h1></br>
             <!--
             display player cards
             -->
             <div class="row text center">
                 <img ng-repeat="card in player.Cards" ng-src="./assets/cards/{{card.Value}}_of_{{card.Suit}}.png" alt="Card." id="cardTH"></img>
             </div>
-            <p>Current bet: {{tableBet}}</p>
+            <p>To call: {{tableBet}}</p>
             <p>Your chip stack: {{player.ChipStack}}</p></br>
             <!--
             check, call and fold buttons
             -->
             <div class="btn-group text-center">
-                <button class="btn buttonsTH" ng-click="playerCheck()">Check</button>
-                <button class="btn buttonsTH" ng-click="playerCall(Steve.CurrentBet)">Call</button>
-                <button class="btn buttonsTH" ng-click="playerFold()">Fold</button>
+                <button class="btn buttonsTH" ng-click="playerCheck()" ng-disabled="tableBet > 0; player.Fold == true">Check</button>
+                <button class="btn buttonsTH" ng-click="playerCall(Steve.CurrentBet)" ng-disabled="player.Fold == true">Call</button>
+                <button class="btn buttonsTH" ng-click="playerFold(); player.Fold = true" ng-disabled="player.Fold == true">Fold</button>
             </div></br></br>
             <!--
             betting interface
             -->
             <div class="text center">
                 <form name="betTH">
-                    <input type="number" name="amountTH" ng-model="tableBet" style="color:#2E282A;">
+                    <input type="number" name="amountTH" ng-model="player.raiseAmount" style="color:#2E282A;">
                     <!--<span class="emphText">A number between 5 - 100 is required!</span>--></br></br>
-                    <button class="btn buttonsTH">Raise</button>
+                    <button class="btn buttonsTH" ng-click="playerRaise()" ng-disabled="player.Fold == true">Raise</button>
                 </form>
             </div>  
         </div>
-    </div>    
+    </div>                
 </div>
